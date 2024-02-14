@@ -24,5 +24,7 @@ namespace ElasticSearchSample
             var result = Context.Search<Person>(s => request);
             return result.Documents.ToList();
         }
+
+
     }
 }

@@ -1,19 +1,35 @@
-﻿namespace ElasticSearchSample
+﻿using ElasticSearchSample.Services;
+using Nest;
+using System.Security.Policy;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace ElasticSearchSample
 {
     class Program
     {
-        static void Main(string[] args)
+        async static Task Main(string[] args)
+        {
+            //await Sample2();
+            var persons = await GetAllPersons();
+
+        }
+
+        public void Sample1()
         {
             var context = new ElasticSearchContext();
-            var person = new Person()
-            {
-                Id = 1,
-                Name = "First person",
-                Email = "Email1"
-            };
-            context.Insert(person, "person_data");
+            var elasticSearchService = new PersonService(context);
 
-            var personInDoc = new PersonService(context).Search(s=>s.From(0).Size(10));
+            //var person = new Person()
+            //{
+            //    Id = 2,
+            //    Name = "First person",
+            //    Email = "Email1"
+            //};
+            //var response = context.Insert(person, "person_data");
+
+            var persons = elasticSearchService.Search(s => s.From(0).Size(10).Query(q => q.Match(m => m.Field(f => f.Name.StartsWith("First")))));
 
             /*
             var docs = _eventService.Search(s => s
@@ -34,6 +50,24 @@
                 )
             ));
              */
+        }
+        public async static Task Sample2()
+        {
+            var url = "http://localhost:9200";
+            var client = new ElasticClient(new Uri(url));
+            var _elasticSearchService = new ElasticSearchService<Person>(client);
+            var persons = new List<Person>();
+            for (var i = 0; i < 10; i++) { persons.Add(new Person() { Id = i + 1, Name = $"Person{i + 1}", Email = $"email{i}.test.uz" }); }
+            await _elasticSearchService.AddBulk(persons);
+
+        }
+
+        public async static Task<List<Person>> GetAllPersons()
+        {
+            var url = "http://localhost:9200";
+            var client = new ElasticClient(new Uri(url));
+            var _elasticSearchService = new ElasticSearchService<Person>(client);
+            return await _elasticSearchService.GetAll();
         }
     }
 }
