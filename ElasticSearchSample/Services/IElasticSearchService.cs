@@ -7,12 +7,12 @@ namespace ElasticSearchSample.Services
     public interface IElasticSearchService<T> where T : class
     {
         IElasticSearchService<T> Index(string indexName);
-        Task<BulkResponse> AddOrUpdateBulk(IEnumerable<T> documents);
-        Task<T> AddOrUpdate(T document);
-        Task<BulkResponse> AddBulk(IList<T> documents);
-        Task<GetResponse<T>> Get(string key);
-        Task<ISearchResponse<T>> Query(SearchDescriptor<T> sd);
-        Task<bool> Remove(string key);
-        Task<DeleteByQueryResponse> BulkRemove(IDeleteByQueryRequest<T> queryReq);
+        Task<BulkResponse> AddOrUpdateBulkAsync(IEnumerable<T> documents);
+        Task<T> AddOrUpdateAsync(T document);
+        Task<BulkResponse> AddBulkAsync(IList<T> documents);
+        Task<GetResponse<T>> GetAsync(string key);
+        Task<ISearchResponse<T>> QueryAsync(SearchDescriptor<T> sd);
+        Task<bool> RemoveAsync(string key);
+        Task<DeleteByQueryResponse> BulkRemoveAsync(IDeleteByQueryRequest<T> queryReq);
     }
 }

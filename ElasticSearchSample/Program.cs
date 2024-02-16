@@ -1,6 +1,5 @@
 ﻿using ElasticSearchSample.Services;
 using Nest;
-using System.Security.Policy;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -58,7 +57,7 @@ namespace ElasticSearchSample
             var _elasticSearchService = new ElasticSearchService<Person>(client);
             var persons = new List<Person>();
             for (var i = 0; i < 10; i++) { persons.Add(new Person() { Id = i + 1, Name = $"Person{i + 1}", Email = $"email{i}.test.uz" }); }
-            await _elasticSearchService.AddBulk(persons);
+            await _elasticSearchService.AddBulkAsync(persons);
 
         }
 
@@ -67,7 +66,7 @@ namespace ElasticSearchSample
             var url = "http://localhost:9200";
             var client = new ElasticClient(new Uri(url));
             var _elasticSearchService = new ElasticSearchService<Person>(client);
-            return await _elasticSearchService.GetAll();
+            return await _elasticSearchService.GetAllAsync();
         }
     }
 }
