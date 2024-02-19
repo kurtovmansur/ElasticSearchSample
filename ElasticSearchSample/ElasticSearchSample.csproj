@@ -36,10 +36,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Elasticsearch.Net, Version=7.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
-      <HintPath>..\packages\Elasticsearch.Net.7.13.2\lib\net461\Elasticsearch.Net.dll</HintPath>
+      <HintPath>..\packages\Elasticsearch.Net.7.17.5\lib\net461\Elasticsearch.Net.dll</HintPath>
     </Reference>
     <Reference Include="Nest, Version=7.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
-      <HintPath>..\packages\NEST.7.13.2\lib\net461\Nest.dll</HintPath>
+      <HintPath>..\packages\NEST.7.17.5\lib\net461\Nest.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -71,23 +71,24 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="ElasticSearchClient.cs" />
+    <Compile Include="Services\Notification\Models\NotificationDocument.cs" />
+    <Compile Include="Services\Notification\Models\NotificationReciver.cs" />
+    <Compile Include="Services\Notification\Models\NotificationType.cs" />
+    <Compile Include="Services\Notification\Models\ReciverType.cs" />
+    <Compile Include="Services\Notification\Models\ViewStatus.cs" />
+    <Compile Include="Services\Notification\NotificationService.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="PersonService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ElasticSearchService.cs" />
     <Compile Include="Services\IElasticSearchService.cs" />
-    <Compile Include="Services\Models\NotificationDto.cs" />
-    <Compile Include="Services\Models\NotificationReciver.cs" />
-    <Compile Include="Services\Models\NotificationType.cs" />
-    <Compile Include="Services\Models\ReciverType.cs" />
-    <Compile Include="Services\Models\UserGroupType.cs" />
-    <Compile Include="Services\Models\ViewStatus.cs" />
-    <Compile Include="Services\NotificationService.cs" />
+    <Compile Include="Services\Notification\Models\NotificationDto.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

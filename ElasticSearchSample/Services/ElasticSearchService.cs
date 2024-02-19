@@ -60,12 +60,13 @@ namespace ElasticSearchSample.Services
 
         public async Task<List<T>> GetAllAsync()
         {
-            var searchResponse = await _client.SearchAsync<T>(s => s.Index(IndexName).Query(q => q.MatchAll()));
+            var searchResponse = await _client.SearchAsync<T>(s => s.Index(IndexName).Skip(0).Size(0).Query(q => q.MatchAll()));
             return searchResponse.IsValid ? searchResponse.Documents.ToList() : default;
         }
 
         public async Task<ISearchResponse<T>> QueryAsync(SearchDescriptor<T> sd)
         {
+            sd.Index(IndexName);
             var searchResponse = await _client.SearchAsync<T>(sd);
             return searchResponse;
         }
@@ -79,6 +80,14 @@ namespace ElasticSearchSample.Services
         public async Task<DeleteByQueryResponse> BulkRemoveAsync(IDeleteByQueryRequest<T> queryReq)
         {
             var response = await _client.DeleteByQueryAsync(queryReq);
+            return response;
+        }
+        public async Task<DeleteByQueryResponse> DeleteAll()
+        {
+            var response = await _client.DeleteByQueryAsync<T>(del => 
+            del.Index(IndexName)
+               .Query(q => q.QueryString(qs => qs.Query("*"))));
+            
             return response;
         }
     }

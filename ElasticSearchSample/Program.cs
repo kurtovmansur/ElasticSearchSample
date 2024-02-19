@@ -1,17 +1,25 @@
 ﻿using ElasticSearchSample.Services;
+using ElasticSearchSample.Services.Notification;
+using ElasticSearchSample.Services.Notification.Models;
 using Nest;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ElasticSearchSample
 {
     class Program
     {
+        private static string url = "http://localhost:9200";
+        private static ElasticClient client = new ElasticClient(new Uri(url));
         async static Task Main(string[] args)
         {
             //await Sample2();
-            var persons = await GetAllPersons();
+            //for(var x=0; x<50;x++)
+            // await AddNotification();
+            await AddNotification();
+            await GetAllNotifications();
 
         }
 
@@ -52,8 +60,6 @@ namespace ElasticSearchSample
         }
         public async static Task Sample2()
         {
-            var url = "http://localhost:9200";
-            var client = new ElasticClient(new Uri(url));
             var _elasticSearchService = new ElasticSearchService<Person>(client);
             var persons = new List<Person>();
             for (var i = 0; i < 10; i++) { persons.Add(new Person() { Id = i + 1, Name = $"Person{i + 1}", Email = $"email{i}.test.uz" }); }
@@ -63,10 +69,53 @@ namespace ElasticSearchSample
 
         public async static Task<List<Person>> GetAllPersons()
         {
-            var url = "http://localhost:9200";
-            var client = new ElasticClient(new Uri(url));
             var _elasticSearchService = new ElasticSearchService<Person>(client);
+            var search = new SearchDescriptor<Person>();
+            var searchResponse = await _elasticSearchService.QueryAsync(search.Query(q => (
+            q.Term(t => t.Field(r => r.Name.StartsWith("Per")
+            )))));
+            var response = searchResponse.Hits.Select(m => (Person)m.Source).ToList();
+            
             return await _elasticSearchService.GetAllAsync();
+        }
+
+        public async static Task GetAllNotifications()
+        {
+            var _elasticSearchService = new ElasticSearchService<NotificationDocument>(client);
+            var notificationService = new NotificationService(_elasticSearchService);
+            var result1 = await notificationService.GetNotificationsAsync(DateTime.Today.AddDays(-1), DateTime.Today.AddDays(1));
+            var result2 = await notificationService.GetNotificationsByOrgAsync(DateTime.Today.AddDays(-1), DateTime.Today.AddDays(1), 10);
+        }
+
+        public async static Task AddNotification()
+        {
+            var _elasticSearchService = new ElasticSearchService<NotificationDocument>(client);
+
+            //var not = await _elasticSearchService.DeleteAll();
+            var notificationService = new NotificationService(_elasticSearchService);
+            await notificationService.Push(new NotificationDto()
+            {
+                Message="Yangi test2",
+                Title = "Title2",
+                Type = NotificationType.Info,
+                Recivers = new List<NotificationReciver>()
+                {
+                    new NotificationReciver()
+                    {
+                        ReciverId = 10,
+                        ReciverType=ReciverType.Employee,
+                        Status = ViewStatus.NotViewed
+                    },
+                    new NotificationReciver()
+                    {
+                        ReciverId = 11,
+                        ReciverType=ReciverType.Employee,
+                        Status = ViewStatus.NotViewed
+                    }
+                }
+            });
+
+            var result = await notificationService.GetNotificationsAsync(DateTime.Today.AddDays(-1), DateTime.Today.AddDays(1));
         }
     }
 }

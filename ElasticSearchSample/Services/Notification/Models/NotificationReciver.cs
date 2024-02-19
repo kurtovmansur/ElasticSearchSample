@@ -1,4 +1,4 @@
-﻿namespace ElasticSearchSample.Services.Models
+﻿namespace ElasticSearchSample.Services.Notification.Models
 {
     public class NotificationReciver
     {
