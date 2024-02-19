@@ -46,7 +46,9 @@ namespace ElasticSearchSample.Services.Notification
                                             q.DateRange(d => d
                                             .Field(f => f.CreatedTime)
                                             .GreaterThan(startDate.ToUniversalTime()).LessThan(endDate.ToUniversalTime())) &&
-                                            q.Term(t => t.Field(a => a.Notification.Recivers[0].ReciverId).Value(orgId))).Take(0).Size(10000);
+                                            q.Term(t => t.Field(a => a.Notification.Recivers[0].ReciverId).Value(orgId)) &&
+                                            q.Term(t => t.Field(a => a.Notification.Recivers[0].ReciverType).Value(ReciverType.Organization))
+                                            ).Take(0).Size(10000);
             try
             {
 

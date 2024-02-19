@@ -84,7 +84,7 @@ namespace ElasticSearchSample
             var _elasticSearchService = new ElasticSearchService<NotificationDocument>(client);
             var notificationService = new NotificationService(_elasticSearchService);
             var result1 = await notificationService.GetNotificationsAsync(DateTime.Today.AddDays(-1), DateTime.Today.AddDays(1));
-            var result2 = await notificationService.GetNotificationsByOrgAsync(DateTime.Today.AddDays(-1), DateTime.Today.AddDays(1), 10);
+            var result2 = await notificationService.GetNotificationsByOrgAsync(DateTime.Today.AddDays(-1), DateTime.Today.AddDays(1), 11);
         }
 
         public async static Task AddNotification()
@@ -109,7 +109,7 @@ namespace ElasticSearchSample
                     new NotificationReciver()
                     {
                         ReciverId = 11,
-                        ReciverType=ReciverType.Employee,
+                        ReciverType=ReciverType.Organization,
                         Status = ViewStatus.NotViewed
                     }
                 }
