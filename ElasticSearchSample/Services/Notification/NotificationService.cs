@@ -41,14 +41,13 @@ namespace ElasticSearchSample.Services.Notification
 
         public async Task<List<NotificationDto>> GetNotificationsByOrgAsync(DateTime startDate, DateTime endDate, int orgId)
         {
-            var searchByNotification = new SearchDescriptor<NotificationDocument>();
+            var searchByNotification = new SearchDescriptor<NotificationDto>();
             var query = searchByNotification.Query(q =>
                                             q.DateRange(d => d
                                             .Field(f => f.CreatedTime)
                                             .GreaterThan(startDate.ToUniversalTime()).LessThan(endDate.ToUniversalTime())) &&
-                                            q.Term(t => t.Field(a => a.Notification.Recivers[0].ReciverId).Value(orgId)) &&
-                                            q.Term(t => t.Field(a => a.Notification.Recivers[0].ReciverType).Value(ReciverType.Organization))
-                                            ).Take(0).Size(10000);
+                                            q.Term(t => t.Field(a => a.Recivers[0].ReciverId).Value(orgId)))
+                                            .Take(0).Size(100);
             try
             {
 
@@ -58,7 +57,7 @@ namespace ElasticSearchSample.Services.Notification
             }
             catch (Exception ex)
             {
-                return null;
+                throw new Exception("Xatolik yuzaga keldi!");
             }
         }
     }

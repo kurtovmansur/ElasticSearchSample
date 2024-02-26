@@ -36,7 +36,7 @@ namespace ElasticSearchSample
             //};
             //var response = context.Insert(person, "person_data");
 
-            var persons = elasticSearchService.Search(s => s.From(0).Size(10).Query(q => q.Match(m => m.Field(f => f.Name.StartsWith("First")))));
+            var personsWithUzEmail = elasticSearchService.Search(s => s.From(0).Size(10).Query(q => q.Match(m => m.Field(f => f.Email.EndsWith("uz")))));
 
             /*
             var docs = _eventService.Search(s => s
@@ -62,8 +62,20 @@ namespace ElasticSearchSample
         {
             var _elasticSearchService = new ElasticSearchService<Person>(client);
             var persons = new List<Person>();
-            for (var i = 0; i < 10; i++) { persons.Add(new Person() { Id = i + 1, Name = $"Person{i + 1}", Email = $"email{i}.test.uz" }); }
-            await _elasticSearchService.AddBulkAsync(persons);
+            for (var i = 0; i < 10; i++)
+            {
+                persons.Add(
+                new Person()
+                {
+                    Id = i + 1,
+                    Name = $"Person{i + 1}",
+                    Email = $"email{i}.test.uz"
+                });
+            }
+            var response = await _elasticSearchService.AddBulkAsync(persons);
+            if (response.ApiCall.Success)
+                await Console.Out.WriteLineAsync("Hammasi yaxshi!");
+            else await Console.Out.WriteLineAsync($"Xatolik yuzaga keldi!");
 
         }
 
@@ -75,7 +87,7 @@ namespace ElasticSearchSample
             q.Term(t => t.Field(r => r.Name.StartsWith("Per")
             )))));
             var response = searchResponse.Hits.Select(m => (Person)m.Source).ToList();
-            
+
             return await _elasticSearchService.GetAllAsync();
         }
 
@@ -84,7 +96,7 @@ namespace ElasticSearchSample
             var _elasticSearchService = new ElasticSearchService<NotificationDocument>(client);
             var notificationService = new NotificationService(_elasticSearchService);
             var result1 = await notificationService.GetNotificationsAsync(DateTime.Today.AddDays(-1), DateTime.Today.AddDays(1));
-            var result2 = await notificationService.GetNotificationsByOrgAsync(DateTime.Today.AddDays(-1), DateTime.Today.AddDays(1), 11);
+            var result2 = await notificationService.GetNotificationsByOrgAsync(DateTime.Today.AddDays(-1), DateTime.Today.AddDays(1), 100);
         }
 
         public async static Task AddNotification()
@@ -95,7 +107,7 @@ namespace ElasticSearchSample
             var notificationService = new NotificationService(_elasticSearchService);
             await notificationService.Push(new NotificationDto()
             {
-                Message="Yangi test2",
+                Message = "Yangi test2",
                 Title = "Title2",
                 Type = NotificationType.Info,
                 Recivers = new List<NotificationReciver>()

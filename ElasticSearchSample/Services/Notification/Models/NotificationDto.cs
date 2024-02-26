@@ -20,10 +20,25 @@ namespace ElasticSearchSample.Services.Notification.Models
             CreatedTime = source.Notification.CreatedTime.AddHours(5);
         }
 
+        /// <summary>
+        /// Xabar sarlovhasi
+        /// </summary>
         public string Title { get; set; }
+
+        /// <summary>
+        /// Xabar matni
+        /// </summary>
         public string Message { get; set; }
+
+        /// <summary>
+        /// Yaratilgan vaqti, UniversalTime shaklda
+        /// </summary>
         public DateTime CreatedTime { get; set; }
         public NotificationType Type { get; set; }
+
+        /// <summary>
+        /// Kim uchun? (Xabarni oluvchilar)
+        /// </summary>
         public List<NotificationReciver> Recivers { get; set; }
     }
 }
